@@ -5,8 +5,6 @@
 /.pnp
 .pnp.js
 
-/PrivateRoute.js
-/PublicRoute.js
 
 # testing
 /coverage
