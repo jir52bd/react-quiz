@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState, useReducer } from "react";
 import useQuestions from "../../hooks/useQuestions";
 import _ from "lodash";
+// import { useAuth } from "../../contexts/AuthContext";
+// import { getDatabase, set, ref } from "firebase/database";
 
 const initialState = null;
 
@@ -36,6 +38,7 @@ export default function Quiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const [qna, dispatch] = useReducer(reducer, initialState);
+  // const { currentUser } = useAuth();
 
   useEffect(() => {
     dispatch({
@@ -53,6 +56,34 @@ export default function Quiz() {
     });
   }
 
+  //handle when user clicks the next button to next questions
+  function nextQuestion() {
+    if (currentQuestion + 1 < questions.length) {
+      setCurrentQuestion((prevCurrent) => prevCurrent + 1);
+    }
+  }
+
+  //handle when user clicks the prev button to previous questions
+  function prevQuestion() {
+    if (currentQuestion >= 1 && currentQuestion <= questions.length) {
+      setCurrentQuestion((prevCurrent) => prevCurrent + 1);
+    }
+  }
+
+  //submit function
+  // async function submit() {
+  //   const { uid } = currentUser;
+  //   const db = getDatabase();
+  //   const resultRef = ref(db, `result/${uid}`);
+  //   await set(resultRef, {
+  //     [id]: qna,
+  //   });
+  // }
+
+  //calculate percentage of progreaa
+  const percentage =
+    questions.length > 0 ? ((currentQuestion + 1) / questions.length) * 100 : 0;
+
   return (
     <>
       {loading && <div>loading .... </div>}
@@ -65,7 +96,11 @@ export default function Quiz() {
             options={qna[currentQuestion].options}
             handlechange={handleAnswerChange}
           />
-          <ProgressBar />
+          <ProgressBar
+            next={nextQuestion}
+            prev={prevQuestion}
+            progress={percentage}
+          />
           <MiniPlayer />
         </>
       )}
